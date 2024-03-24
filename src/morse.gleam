@@ -1,5 +1,7 @@
 import gleam/io
 import gleam/dict
+import gleam/pair
+import gleam/list
 
 pub fn main() {
   io.println("Hello from morse!")
@@ -46,6 +48,13 @@ const morse_dictionary_list = [
 
 pub fn decode_letter(morse string: String) -> Result(String, Nil) {
   morse_dictionary_list
+  |> dict.from_list
+  |> dict.get(string)
+}
+
+pub fn encode_letter(morse string: String) -> Result(String, Nil) {
+  morse_dictionary_list
+  |> list.map(fn(x) { pair.swap(x) })
   |> dict.from_list
   |> dict.get(string)
 }
