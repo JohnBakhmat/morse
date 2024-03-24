@@ -48,17 +48,17 @@ const morse_dictionary_list = [
   #("----.", "9"),
 ]
 
-pub fn decode_letter(morse string: String) -> Result(String, Nil) {
+pub fn decode_letter(morse in: String) -> Result(String, Nil) {
   morse_dictionary_list
   |> dict.from_list
-  |> dict.get(string)
+  |> dict.get(string.trim(in))
 }
 
-pub fn encode_letter(latin string: String) -> Result(String, Nil) {
+pub fn encode_letter(latin in: String) -> Result(String, Nil) {
   morse_dictionary_list
   |> list.map(fn(x) { pair.swap(x) })
   |> dict.from_list
-  |> dict.get(string)
+  |> dict.get(string.trim(in))
 }
 
 pub fn decode_word(
@@ -66,15 +66,30 @@ pub fn decode_word(
   separator sp: String,
 ) -> Result(String, Nil) {
   input
+  |> string.trim()
   |> string.split(sp)
   |> list.filter(fn(x) { string.length(x) > 0 })
   |> list.map(fn(x) {
     x
-    |> string.trim
     |> decode_letter
   })
   |> result.all()
   |> result.map(fn(x) { string.join(x, "") })
+}
+
+pub fn encode_word(
+  latin input: String,
+  separator sp: String,
+) -> Result(String, Nil) {
+  input
+  |> string.trim()
+  |> string.split("")
+  |> list.map(fn(x) {
+    x
+    |> encode_letter
+  })
+  |> result.all()
+  |> result.map(fn(x) { string.join(x, sp) })
 }
 
 pub fn decode_string(
@@ -91,4 +106,20 @@ pub fn decode_string(
   })
   |> result.all()
   |> result.map(fn(word) { string.join(word, " ") })
+}
+
+pub fn encode_string(
+  latin input: String,
+  word_separator ws: String,
+  letter_separator ls: String,
+) -> Result(String, Nil) {
+  input
+  |> string.trim()
+  |> string.split(ws)
+  |> list.map(fn(word) {
+    word
+    |> encode_word(ls)
+  })
+  |> result.all()
+  |> result.map(fn(word) { string.join(word, ws) })
 }
