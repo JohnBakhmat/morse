@@ -115,7 +115,7 @@ pub fn encode_string(
 ) -> Result(String, Nil) {
   input
   |> string.trim()
-  |> string.split(ws)
+  |> string.split(" ")
   |> list.map(fn(word) {
     word
     |> encode_word(ls)
