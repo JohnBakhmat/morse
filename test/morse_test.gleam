@@ -1,7 +1,7 @@
 import gleeunit
 import gleeunit/should
 import gleam/dict
-import morse.{decode_letter, encode_letter}
+import morse.{decode_letter, decode_string, encode_letter}
 
 pub fn main() {
   gleeunit.main()
@@ -44,4 +44,16 @@ pub fn encode_letter_test() {
 
   decode_letter("...-.-.-.-")
   |> should.be_error
+}
+
+pub fn decode_string_test() {
+  "... --- ..."
+  |> decode_string(word_separator: "/", letter_separator: " ")
+  |> should.be_ok
+  |> should.equal("SOS")
+
+  ".. / .-.. ---  ...- . / . .- - .. -. --. / .- ... ..."
+  |> decode_string(word_separator: "/", letter_separator: " ")
+  |> should.be_ok
+  |> should.equal("I LOVE EATING ASS")
 }
